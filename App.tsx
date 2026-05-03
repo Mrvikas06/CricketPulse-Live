@@ -154,7 +154,7 @@ export default function App() {
 
   useEffect(() => {
     syncLiveFeed();
-    const interval = window.setInterval(syncLiveFeed, 15000);
+    const interval = window.setInterval(syncLiveFeed, 5000);
     return () => window.clearInterval(interval);
   }, [syncLiveFeed]);
 

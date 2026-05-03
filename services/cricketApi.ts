@@ -145,8 +145,11 @@ export const runRate = (inning?: CricketInning) => {
 };
 
 export async function fetchCricketMatches(options: CricketFeedOptions = {}): Promise<CricketMatch[]> {
-  const response = await fetch(options.feedUrl || DEFAULT_FEED_URL, {
+  const base = options.feedUrl || DEFAULT_FEED_URL;
+  const feedUrl = `${base}${base.includes('?') ? '&' : '?'}t=${Date.now()}`;
+  const response = await fetch(feedUrl, {
     signal: options.signal,
+    cache: 'no-store',
   });
 
   if (!response.ok) {
