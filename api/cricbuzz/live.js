@@ -3,26 +3,95 @@ const MOCK_MATCHES = [
   {
     matchInfo: {
       matchId: 1,
-      match_type: 'T20I',
-      series: 'T20 World Cup 2024',
-      status: 'LIVE',
+      matchDesc: 'India vs Australia',
+      matchFormat: 'T20I',
+      startDate: new Date().toISOString(),
+      state: 'Live',
+      stateTitle: 'Live',
+      status: 'Live',
+      shortStatus: 'Live',
+      venue: 'MCG, Melbourne',
     },
-    matchScore: {
-      team1: { teamName: 'India', score: 145, wickets: 3, overs: 15.2 },
-      team2: { teamName: 'Australia', score: 0, wickets: 0, overs: 0 },
-    },
+    matchScore: [
+      {
+        team1: {
+          teamName: 'India',
+          teamSName: 'IND',
+          score: 145,
+          wickets: 3,
+          overs: 15.2,
+        },
+        team2: {
+          teamName: 'Australia',
+          teamSName: 'AUS',
+          score: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    ],
   },
   {
     matchInfo: {
       matchId: 2,
-      match_type: 'ODI',
-      series: 'Asia Cup 2024',
-      status: 'UPCOMING',
+      matchDesc: 'Pakistan vs Sri Lanka',
+      matchFormat: 'ODI',
+      startDate: new Date(Date.now() + 3600000).toISOString(),
+      state: 'Upcoming',
+      stateTitle: 'Upcoming',
+      status: 'Not Started',
+      shortStatus: 'Upcoming',
+      venue: 'Colombo, Sri Lanka',
     },
-    matchScore: {
-      team1: { teamName: 'Pakistan', score: 0, wickets: 0, overs: 0 },
-      team2: { teamName: 'Sri Lanka', score: 0, wickets: 0, overs: 0 },
+    matchScore: [
+      {
+        team1: {
+          teamName: 'Pakistan',
+          teamSName: 'PAK',
+          score: 0,
+          wickets: 0,
+          overs: 0,
+        },
+        team2: {
+          teamName: 'Sri Lanka',
+          teamSName: 'SL',
+          score: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    ],
+  },
+  {
+    matchInfo: {
+      matchId: 3,
+      matchDesc: 'England vs South Africa',
+      matchFormat: 'Test',
+      startDate: new Date(Date.now() + 7200000).toISOString(),
+      state: 'Upcoming',
+      stateTitle: 'Upcoming',
+      status: 'Not Started',
+      shortStatus: 'Upcoming',
+      venue: 'Lord\'s, London',
     },
+    matchScore: [
+      {
+        team1: {
+          teamName: 'England',
+          teamSName: 'ENG',
+          score: 0,
+          wickets: 0,
+          overs: 0,
+        },
+        team2: {
+          teamName: 'South Africa',
+          teamSName: 'SA',
+          score: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    ],
   },
 ];
 
