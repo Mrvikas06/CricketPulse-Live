@@ -1,5 +1,5 @@
-// Using mock cricket match data for demo - Real IPL Match
-const MOCK_MATCHES = [
+// Base mock cricket match data
+const getBaseMockMatches = () => [
   {
     matchInfo: {
       matchId: 1,
@@ -40,29 +40,6 @@ const MOCK_MATCHES = [
         },
       },
     },
-    ballCommentary: [
-      { ball: 15.6, text: 'Gill drives down the ground for a single! KKR need 22 in 24 balls' },
-      { ball: 15.5, text: 'Wicket! Cummins caught at mid-off. KKR 143/2' },
-      { ball: 15.4, text: 'Cummins smashes over long-on for 4! Great shot!' },
-      { ball: 15.3, text: 'Dot ball. Pressure building on KKR' },
-      { ball: 15.2, text: 'Boundary! Cummins hits over cover for 4. KKR 138/1' },
-      { ball: 15.1, text: 'Single taken. KKR 134/1' },
-      { ball: 15.0, text: 'Gill on strike! 26 needed from 30 balls' },
-      { ball: 14.6, text: 'SIX! Nitish takes on the bowler! Superb shot over square leg' },
-      { ball: 14.5, text: 'Single. KKR 127/1' },
-      { ball: 14.4, text: 'Dot. Perfect line and length' },
-      { ball: 14.3, text: 'FOUR! Nitish gets off strike with a boundary' },
-      { ball: 14.2, text: 'Single to third man. KKR 122/1' },
-      { ball: 14.1, text: 'Boundary! Nitish Rana drives through covers for 4' },
-      { ball: 14.0, text: 'New bowler on! 39 runs needed from 42 balls' },
-      { ball: 13.6, text: 'Wicket! Manish Pandey run out for 37. KKR 115/1' },
-      { ball: 13.5, text: 'Single. KKR 115/0' },
-      { ball: 13.4, text: 'FOUR! Pandey punches through mid-off' },
-      { ball: 13.3, text: 'Dot ball' },
-      { ball: 13.2, text: 'Single. 50 run partnership!' },
-      { ball: 13.1, text: 'Two runs. KKR moving along nicely' },
-      { ball: 13.0, text: 'Powerplay over! KKR 103/0 - Excellent start!' },
-    ],
   },
   {
     matchInfo: {
@@ -113,10 +90,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Return mock data for now (Cricbuzz API is restricted)
-    const matches = MOCK_MATCHES;
+    // Simulate live score updates based on current time
+    const now = Date.now();
+    const secondsElapsed = Math.floor((now % 300000) / 1000); // Cycle every 5 minutes
+    
+    // Get base matches
+    const matches = getBaseMockMatches();
+    
+    // Update KKR's live score dynamically
+    if (matches[0] && matches[0].matchScore) {
+      const kkrInnings = matches[0].matchScore.team2Score.inngs1;
+      
+      // Simulate live updates: runs increase every 10 seconds, wickets every 60 seconds
+      kkrInnings.runs = 143 + Math.floor(secondsElapsed / 10);
+      kkrInnings.overs = 15.5 + Math.floor((secondsElapsed / 60) * 0.2);
+      kkrInnings.wickets = Math.min(2 + Math.floor(secondsElapsed / 120), 8);
+      
+      // Cap at maximum
+      if (kkrInnings.runs > 165) kkrInnings.runs = 165;
+      if (kkrInnings.overs > 20) kkrInnings.overs = 20;
+    }
 
-    res.setHeader('Cache-Control', 'max-age=60');
+    // No cache - force fresh data every request
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
     return res.status(200).json({
       source: 'mock-cricket-data',
       updatedAt: new Date().toISOString(),
@@ -126,7 +125,7 @@ export default async function handler(req, res) {
     console.error('[cricbuzz/live.js]', error);
     return res.status(200).json({
       source: 'mock-cricket-data',
-      matches: MOCK_MATCHES,
+      matches: getBaseMockMatches(),
       error: error instanceof Error ? error.message : 'Using fallback data',
     });
   }
