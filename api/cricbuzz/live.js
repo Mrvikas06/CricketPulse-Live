@@ -5,124 +5,164 @@ const MOCK_MATCHES = [
       matchId: 1,
       matchDesc: 'Kolkata Knight Riders vs Mumbai Indians',
       matchFormat: 'T20',
-      startDate: new Date().toISOString(),
+      startDate: Date.now(),
       state: 'Live',
       stateTitle: 'Live',
       status: 'Live',
       shortStatus: 'Live',
-      venue: 'Eden Gardens, Kolkata',
+      seriesName: 'Indian Premier League 2024',
+      team1: {
+        teamName: 'Kolkata Knight Riders',
+        teamSName: 'KKR',
+      },
+      team2: {
+        teamName: 'Mumbai Indians',
+        teamSName: 'MI',
+      },
+      venueInfo: {
+        ground: 'Eden Gardens',
+        city: 'Kolkata',
+      },
     },
-    matchScore: [
-      {
-        team1: {
-          teamName: 'Kolkata Knight Riders',
-          teamSName: 'KKR',
-          score: 165,
+    matchScore: {
+      team1Score: {
+        inngs1: {
+          runs: 165,
           wickets: 7,
           overs: 20,
         },
-        team2: {
-          teamName: 'Mumbai Indians',
-          teamSName: 'MI',
-          score: 142,
+      },
+      team2Score: {
+        inngs1: {
+          runs: 142,
           wickets: 8,
           overs: 19.3,
         },
       },
-    ],
+    },
   },
   {
     matchInfo: {
       matchId: 2,
       matchDesc: 'Delhi Capitals vs Royal Challengers Bangalore',
       matchFormat: 'T20',
-      startDate: new Date(Date.now() + 3600000).toISOString(),
+      startDate: Date.now() + 3600000,
       state: 'Upcoming',
       stateTitle: 'Upcoming',
       status: 'Not Started',
       shortStatus: 'Upcoming',
-      venue: 'Arun Jaitley Stadium, Delhi',
+      seriesName: 'Indian Premier League 2024',
+      team1: {
+        teamName: 'Delhi Capitals',
+        teamSName: 'DC',
+      },
+      team2: {
+        teamName: 'Royal Challengers Bangalore',
+        teamSName: 'RCB',
+      },
+      venueInfo: {
+        ground: 'Arun Jaitley Stadium',
+        city: 'Delhi',
+      },
     },
-    matchScore: [
-      {
-        team1: {
-          teamName: 'Delhi Capitals',
-          teamSName: 'DC',
-          score: 0,
-          wickets: 0,
-          overs: 0,
-        },
-        team2: {
-          teamName: 'Royal Challengers Bangalore',
-          teamSName: 'RCB',
-          score: 0,
+    matchScore: {
+      team1Score: {
+        inngs1: {
+          runs: 0,
           wickets: 0,
           overs: 0,
         },
       },
-    ],
+      team2Score: {
+        inngs1: {
+          runs: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    },
   },
   {
     matchInfo: {
       matchId: 3,
       matchDesc: 'Rajasthan Royals vs Chennai Super Kings',
       matchFormat: 'T20',
-      startDate: new Date(Date.now() + 7200000).toISOString(),
+      startDate: Date.now() + 7200000,
       state: 'Upcoming',
       stateTitle: 'Upcoming',
       status: 'Not Started',
       shortStatus: 'Upcoming',
-      venue: 'Arun Jaitley Stadium, Delhi',
+      seriesName: 'Indian Premier League 2024',
+      team1: {
+        teamName: 'Rajasthan Royals',
+        teamSName: 'RR',
+      },
+      team2: {
+        teamName: 'Chennai Super Kings',
+        teamSName: 'CSK',
+      },
+      venueInfo: {
+        ground: 'Arun Jaitley Stadium',
+        city: 'Delhi',
+      },
     },
-    matchScore: [
-      {
-        team1: {
-          teamName: 'Rajasthan Royals',
-          teamSName: 'RR',
-          score: 0,
-          wickets: 0,
-          overs: 0,
-        },
-        team2: {
-          teamName: 'Chennai Super Kings',
-          teamSName: 'CSK',
-          score: 0,
+    matchScore: {
+      team1Score: {
+        inngs1: {
+          runs: 0,
           wickets: 0,
           overs: 0,
         },
       },
-    ],
+      team2Score: {
+        inngs1: {
+          runs: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    },
   },
   {
     matchInfo: {
       matchId: 4,
       matchDesc: 'Punjab Kings vs Sunrisers Hyderabad',
       matchFormat: 'T20',
-      startDate: new Date(Date.now() + 10800000).toISOString(),
+      startDate: Date.now() + 10800000,
       state: 'Upcoming',
       stateTitle: 'Upcoming',
       status: 'Not Started',
       shortStatus: 'Upcoming',
-      venue: 'Punjab Cricket Association Stadium, Mohali',
+      seriesName: 'Indian Premier League 2024',
+      team1: {
+        teamName: 'Punjab Kings',
+        teamSName: 'PBKS',
+      },
+      team2: {
+        teamName: 'Sunrisers Hyderabad',
+        teamSName: 'SRH',
+      },
+      venueInfo: {
+        ground: 'PCA Stadium',
+        city: 'Mohali',
+      },
     },
-    matchScore: [
-      {
-        team1: {
-          teamName: 'Punjab Kings',
-          teamSName: 'PBKS',
-          score: 0,
-          wickets: 0,
-          overs: 0,
-        },
-        team2: {
-          teamName: 'Sunrisers Hyderabad',
-          teamSName: 'SRH',
-          score: 0,
+    matchScore: {
+      team1Score: {
+        inngs1: {
+          runs: 0,
           wickets: 0,
           overs: 0,
         },
       },
-    ],
+      team2Score: {
+        inngs1: {
+          runs: 0,
+          wickets: 0,
+          overs: 0,
+        },
+      },
+    },
   },
 ];
 
