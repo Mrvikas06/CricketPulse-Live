@@ -1,0 +1,6 @@
+{
+  "name": "CricketPulse Live",
+  "description": "A cricket-first live score, AI commentary, and stadium operations dashboard for matchday coverage.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}
