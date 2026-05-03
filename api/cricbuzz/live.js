@@ -29,7 +29,7 @@ const MOCK_MATCHES = [
         inngs1: {
           runs: 165,
           wickets: 0,
-          overs: 20,
+          overs: 19,
         },
       },
       team2Score: {
