@@ -78,7 +78,7 @@ export default async function handler(req, res) {
       matches: matches || [],
     });
   } catch (error) {
-    console.error('[cricbuzz.js]', error);
+    console.error('[cricbuzz/live.js]', error);
     res.setHeader('Content-Type', 'application/json');
     return res.status(500).json({
       source: 'cricbuzz-web',
