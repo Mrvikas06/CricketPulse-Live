@@ -3,7 +3,7 @@ const MOCK_MATCHES = [
   {
     matchInfo: {
       matchId: 1,
-      matchDesc: 'Kolkata Knight Riders vs Mumbai Indians',
+      matchDesc: 'Kolkata Knight Riders vs Sunrisers Hyderabad',
       matchFormat: 'T20',
       startDate: Date.now(),
       state: 'Live',
@@ -16,8 +16,8 @@ const MOCK_MATCHES = [
         teamSName: 'KKR',
       },
       team2: {
-        teamName: 'Mumbai Indians',
-        teamSName: 'MI',
+        teamName: 'Sunrisers Hyderabad',
+        teamSName: 'SRH',
       },
       venueInfo: {
         ground: 'Eden Gardens',
@@ -27,16 +27,16 @@ const MOCK_MATCHES = [
     matchScore: {
       team1Score: {
         inngs1: {
-          runs: 165,
-          wickets: 7,
-          overs: 20,
+          runs: 178,
+          wickets: 5,
+          overs: 19.2,
         },
       },
       team2Score: {
         inngs1: {
           runs: 142,
-          wickets: 8,
-          overs: 19.3,
+          wickets: 7,
+          overs: 15.3,
         },
       },
     },
@@ -104,47 +104,6 @@ const MOCK_MATCHES = [
       venueInfo: {
         ground: 'Arun Jaitley Stadium',
         city: 'Delhi',
-      },
-    },
-    matchScore: {
-      team1Score: {
-        inngs1: {
-          runs: 0,
-          wickets: 0,
-          overs: 0,
-        },
-      },
-      team2Score: {
-        inngs1: {
-          runs: 0,
-          wickets: 0,
-          overs: 0,
-        },
-      },
-    },
-  },
-  {
-    matchInfo: {
-      matchId: 4,
-      matchDesc: 'Punjab Kings vs Sunrisers Hyderabad',
-      matchFormat: 'T20',
-      startDate: Date.now() + 10800000,
-      state: 'Upcoming',
-      stateTitle: 'Upcoming',
-      status: 'Not Started',
-      shortStatus: 'Upcoming',
-      seriesName: 'Indian Premier League 2024',
-      team1: {
-        teamName: 'Punjab Kings',
-        teamSName: 'PBKS',
-      },
-      team2: {
-        teamName: 'Sunrisers Hyderabad',
-        teamSName: 'SRH',
-      },
-      venueInfo: {
-        ground: 'PCA Stadium',
-        city: 'Mohali',
       },
     },
     matchScore: {
