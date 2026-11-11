@@ -164,13 +164,9 @@ export async function fetchCricketMatches(options: CricketFeedOptions = {}): Pro
   }
 
   const payload = (await response.json()) as CricbuzzWebResponse;
-  if (payload.error) {
-    throw new Error(payload.error);
-  }
-
   const matches = (payload.matches || []).map(normalizeCricbuzzMatch);
   if (!matches.length) {
-    throw new Error('No live Cricbuzz matches found on the web feed');
+    throw new Error(payload.error || 'No live Cricbuzz matches found on the web feed');
   }
 
   return matches;
