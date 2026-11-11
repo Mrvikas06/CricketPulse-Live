@@ -93,24 +93,63 @@ function cricbuzzWebFeedPlugin(): Plugin {
               return true;
             });
 
-          response.setHeader('Content-Type', 'application/json');
-          response.end(
-            JSON.stringify({
-              source: 'cricbuzz-web',
-              updatedAt: new Date().toISOString(),
-              matches,
-            }),
-          );
-        } catch (error) {
-          response.statusCode = 502;
-          response.setHeader('Content-Type', 'application/json');
-          response.end(
-            JSON.stringify({
-              source: 'cricbuzz-web',
-              error: error instanceof Error ? error.message : 'Unable to read Cricbuzz live page',
-              matches: [],
-            }),
-          );
+          if (matches.length > 0) {
+            response.setHeader('Content-Type', 'application/json');
+            response.end(
+              JSON.stringify({
+                source: 'cricbuzz-web',
+                updatedAt: new Date().toISOString(),
+                matches,
+              }),
+            );
+            return;
+          }
+
+          // Fallback to local live simulation when no matches on Cricbuzz web page
+          const mockModule = await import('./api/cricbuzz/live.js');
+          const mockRes = {
+            statusCode: 200,
+            setHeader: (k: string, v: string) => response.setHeader(k, v),
+            status: function (s: number) {
+              this.statusCode = s;
+              return this;
+            },
+            json: (data: unknown) => {
+              response.statusCode = mockRes.statusCode;
+              response.setHeader('Content-Type', 'application/json');
+              response.end(JSON.stringify(data));
+            },
+          };
+          await mockModule.default(_request, mockRes);
+        } catch {
+          // Fallback to local live simulation when Cricbuzz feed is unreachable
+          try {
+            const mockModule = await import('./api/cricbuzz/live.js');
+            const mockRes = {
+              statusCode: 200,
+              setHeader: (k: string, v: string) => response.setHeader(k, v),
+              status: function (s: number) {
+                this.statusCode = s;
+                return this;
+              },
+              json: (data: unknown) => {
+                response.statusCode = mockRes.statusCode;
+                response.setHeader('Content-Type', 'application/json');
+                response.end(JSON.stringify(data));
+              },
+            };
+            await mockModule.default(_request, mockRes);
+          } catch (fallbackError) {
+            response.statusCode = 502;
+            response.setHeader('Content-Type', 'application/json');
+            response.end(
+              JSON.stringify({
+                source: 'cricbuzz-web',
+                error: fallbackError instanceof Error ? fallbackError.message : 'Feed unavailable',
+                matches: [],
+              }),
+            );
+          }
         }
       });
     },
