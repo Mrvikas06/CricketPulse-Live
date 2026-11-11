@@ -39,8 +39,16 @@ const formatMatchTime = (dateString: string) =>
     month: 'short',
   }).format(new Date(dateString));
 
-const getTeamScore = (match: CricketMatch, teamName: string) =>
-  match.score.find((inning) => inning.inning.toLowerCase().startsWith(teamName.toLowerCase()));
+const getTeamScore = (match: CricketMatch, teamName?: string) => {
+  if (!teamName) return undefined;
+  const normalized = teamName.toLowerCase();
+  for (let i = match.score.length - 1; i >= 0; i--) {
+    if (match.score[i].inning.toLowerCase().startsWith(normalized)) {
+      return match.score[i];
+    }
+  }
+  return undefined;
+};
 
 function ScoreLine({ match, team }: { match: CricketMatch; team: string }) {
   const inning = getTeamScore(match, team);
@@ -216,8 +224,8 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
       {!compact && visibleMatches.length > 0 && (
         <div className="match-grid">
           {visibleMatches.slice(0, 6).map((match) => {
-            const firstScore = match.score[0];
-            const secondScore = match.score[1];
+            const firstScore = getTeamScore(match, match.teams[0]);
+            const secondScore = getTeamScore(match, match.teams[1]);
             const isSelected = featured?.id === match.id;
 
             return (
