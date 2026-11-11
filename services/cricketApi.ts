@@ -131,15 +131,22 @@ const normalizeCricbuzzMatch = (match: CricbuzzMatch): CricketMatch => {
   };
 };
 
+export const oversToBalls = (overs?: number): number => {
+  if (!overs || overs <= 0 || !Number.isFinite(overs)) return 0;
+  const tenths = Math.round(overs * 10);
+  const completeOvers = Math.floor(tenths / 10);
+  const ballsInOver = tenths % 10;
+  return completeOvers * 6 + ballsInOver;
+};
+
 export const formatScore = (inning?: CricketInning) => {
   if (!inning) return 'Yet to bat';
-  return `${inning.runs}/${inning.wickets} (${inning.overs})`;
+  return `${inning.runs ?? 0}/${inning.wickets ?? 0} (${inning.overs ?? 0})`;
 };
 
 export const runRate = (inning?: CricketInning) => {
-  if (!inning?.overs) return '0.00';
-  const completeOvers = Math.floor(inning.overs);
-  const balls = completeOvers * 6 + Math.round((inning.overs - completeOvers) * 10);
+  if (!inning?.overs || !inning.runs || inning.runs <= 0) return '0.00';
+  const balls = oversToBalls(inning.overs);
   if (!balls) return '0.00';
   return ((inning.runs / balls) * 6).toFixed(2);
 };
