@@ -92,23 +92,33 @@ export default async function handler(req, res) {
   try {
     // Simulate live score updates based on current time
     const now = Date.now();
-    const secondsElapsed = Math.floor((now % 300000) / 1000); // Cycle every 5 minutes
+    const secondsElapsed = Math.floor((now % 300000) / 1000); // 5-minute repeatable cycle
     
     // Get base matches
     const matches = getBaseMockMatches();
     
-    // Update KKR's live score dynamically
+    // Update KKR's live score dynamically with valid cricket balls/overs
     if (matches[0] && matches[0].matchScore) {
       const kkrInnings = matches[0].matchScore.team2Score.inngs1;
-      
-      // Simulate live updates: runs increase every 10 seconds, wickets every 60 seconds
-      kkrInnings.runs = 143 + Math.floor(secondsElapsed / 10);
-      kkrInnings.overs = 15.5 + Math.floor((secondsElapsed / 60) * 0.2);
-      kkrInnings.wickets = Math.min(2 + Math.floor(secondsElapsed / 120), 8);
-      
-      // Cap at maximum
-      if (kkrInnings.runs > 165) kkrInnings.runs = 165;
-      if (kkrInnings.overs > 20) kkrInnings.overs = 20;
+      const baseBalls = 15 * 6 + 5; // 95 balls
+      const ballsBowled = Math.floor(secondsElapsed / 12);
+      const totalBalls = Math.min(120, baseBalls + ballsBowled);
+      const fullOvers = Math.floor(totalBalls / 6);
+      const extraBalls = totalBalls % 6;
+
+      kkrInnings.overs = Number(`${fullOvers}.${extraBalls}`);
+      kkrInnings.runs = Math.min(168, 143 + Math.floor(ballsBowled * 1.1));
+      kkrInnings.wickets = Math.min(8, 2 + Math.floor(ballsBowled / 8));
+
+      if (kkrInnings.runs >= 166) {
+        matches[0].matchInfo.status = `KKR won by ${10 - kkrInnings.wickets} wickets`;
+        matches[0].matchInfo.state = 'Complete';
+        matches[0].matchInfo.stateTitle = 'Complete';
+      } else {
+        const runsNeeded = 166 - kkrInnings.runs;
+        const ballsRemaining = 120 - totalBalls;
+        matches[0].matchInfo.status = `KKR need ${runsNeeded} runs in ${ballsRemaining} balls`;
+      }
     }
 
     // No cache - force fresh data every request
