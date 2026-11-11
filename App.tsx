@@ -29,14 +29,15 @@ const getLatestInning = (match: CricketMatch | null | undefined) => match?.score
 const getBattingSide = (inningName?: string) => inningName?.replace(/\s+Inning\s+\d+$/i, '') || 'Batting side';
 
 const hasMeaningfulChange = (previous: CricketMatch | null, next: CricketMatch) => {
-  if (!previous) return true;
+  if (!previous || previous.id !== next.id) return true;
   const previousInning = getLatestInning(previous);
   const nextInning = getLatestInning(next);
 
   if (!previousInning && nextInning) return true;
-  if (!previousInning || !nextInning) return false;
+  if (!previousInning || !nextInning) return previous.status !== next.status;
 
   return (
+    previousInning.inning !== nextInning.inning ||
     previousInning.runs !== nextInning.runs ||
     previousInning.wickets !== nextInning.wickets ||
     previousInning.overs !== nextInning.overs ||
@@ -50,36 +51,45 @@ const buildMatchCommentary = (match: CricketMatch, previous: CricketMatch | null
     return `${match.name} is live. ${match.status}`;
   }
 
-  const previousInning = getLatestInning(previous);
   const battingSide = getBattingSide(inning.inning);
   const score = formatScore(inning);
   const rr = runRate(inning);
 
-  if (!previous || !previousInning) {
+  // If different match or no previous data, initialize commentary
+  if (!previous || previous.id !== match.id) {
     return `${match.name} is underway. ${battingSide} are on ${score} with a run rate of ${rr}.`;
+  }
+
+  const previousInning = getLatestInning(previous);
+  if (!previousInning || previousInning.inning !== inning.inning) {
+    return `New innings underway in ${match.name}. ${battingSide} are batting on ${score} (RR ${rr}).`;
   }
 
   const runDelta = inning.runs - previousInning.runs;
   const wicketDelta = inning.wickets - previousInning.wickets;
-  const overDelta = inning.overs - previousInning.overs;
+  const overDelta = Math.round(inning.overs * 10) - Math.round(previousInning.overs * 10);
 
   if (wicketDelta > 0) {
     return `Wicket! ${match.name} tightens up as ${battingSide} move to ${score}.`;
   }
 
   if (runDelta >= 6) {
-    return `Maximum impact from ${battingSide}; they add six runs and move to ${score} at RR ${rr}.`;
+    return `Maximum! ${battingSide} clear the boundary ropes, moving to ${score} at RR ${rr}.`;
   }
 
   if (runDelta >= 4) {
-    return `A boundary shifts momentum for ${battingSide}. The scoreboard now reads ${score}.`;
+    return `Boundary! ${battingSide} find the fence, pushing the total to ${score}.`;
+  }
+
+  if (runDelta > 0) {
+    return `${battingSide} pick up ${runDelta === 1 ? 'a single' : `${runDelta} runs`} to advance to ${score}.`;
   }
 
   if (overDelta > 0) {
-    return `Another over is done. ${battingSide} hold ${score} and keep the chase alive at RR ${rr}.`;
+    return `Over completed. ${battingSide} stand on ${score} with a run rate of ${rr}.`;
   }
 
-  return `${match.status}. ${battingSide} remain at ${score} with a run rate of ${rr}.`;
+  return `${match.status}. ${battingSide} are on ${score} with a run rate of ${rr}.`;
 };
 
 export default function App() {
@@ -93,6 +103,7 @@ export default function App() {
   const commentaryEndRef = useRef<HTMLDivElement>(null);
   const latestMatchRef = useRef<CricketMatch | null>(null);
   const selectedMatchRef = useRef<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     commentaryEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -125,9 +136,14 @@ export default function App() {
   const activeInning = getLatestInning(activeMatch);
 
   const syncLiveFeed = useCallback(async () => {
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       setFeedLoading(true);
-      const nextMatches = await fetchCricketMatches({ feedUrl });
+      const nextMatches = await fetchCricketMatches({ feedUrl, signal: controller.signal });
+      if (controller.signal.aborted) return;
       setLiveMatches(nextMatches);
       setFeedError(null);
       setSelectedMatchId((current) => (current && nextMatches.some((match) => match.id === current) ? current : nextMatches[0]?.id || null));
@@ -143,18 +159,24 @@ export default function App() {
       }
       latestMatchRef.current = nextMatch;
     } catch (err) {
+      if (controller.signal.aborted || (err instanceof DOMException && err.name === 'AbortError')) return;
       const message = err instanceof Error ? err.message : 'Live match feed unavailable';
       setFeedError(message);
       setMatchPulse('Live feed unavailable. Waiting for match updates.');
     } finally {
-      setFeedLoading(false);
+      if (abortControllerRef.current === controller) {
+        setFeedLoading(false);
+      }
     }
   }, [appendCommentary]);
 
   useEffect(() => {
     syncLiveFeed();
     const interval = window.setInterval(syncLiveFeed, 5000);
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearInterval(interval);
+      abortControllerRef.current?.abort();
+    };
   }, [syncLiveFeed]);
 
   return (
