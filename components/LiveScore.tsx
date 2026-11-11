@@ -26,7 +26,10 @@ interface LiveScoreProps {
   compact?: boolean;
 }
 
-const feedUrl = process.env.VITE_CRICBUZZ_WEB_FEED_URL || '/api/cricbuzz/live';
+const feedUrl =
+  import.meta.env.VITE_CRICBUZZ_WEB_FEED_URL ||
+  (typeof process !== 'undefined' ? process.env?.VITE_CRICBUZZ_WEB_FEED_URL : undefined) ||
+  '/api/cricbuzz/live';
 
 const formatMatchTime = (dateString: string) =>
   new Intl.DateTimeFormat(undefined, {
