@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
   CalendarClock,
@@ -82,8 +82,13 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
 
-  const loadScores = async (silent = false) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const loadScores = useCallback(async (silent = false) => {
+    abortControllerRef.current?.abort();
     const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     if (!silent) setLoading(true);
     setError(null);
 
@@ -92,28 +97,35 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
         feedUrl,
         signal: controller.signal,
       });
+      if (controller.signal.aborted) return;
       setMatches(nextMatches);
       setSelectedMatchId((current) =>
         current && nextMatches.some((match) => match.id === current) ? current : nextMatches[0]?.id || null,
       );
       setLastUpdated(new Date());
     } catch (err) {
+      if (controller.signal.aborted || (err instanceof DOMException && err.name === 'AbortError')) {
+        return;
+      }
       setMatches([]);
       setSelectedMatchId(null);
       setError(err instanceof Error ? err.message : 'Live scores unavailable');
       setLastUpdated(new Date());
     } finally {
-      if (!silent) setLoading(false);
+      if (abortControllerRef.current === controller && !silent) {
+        setLoading(false);
+      }
     }
-
-    return () => controller.abort();
-  };
+  }, []);
 
   useEffect(() => {
     loadScores(true);
     const interval = window.setInterval(() => loadScores(true), 30000);
-    return () => window.clearInterval(interval);
-  }, []);
+    return () => {
+      window.clearInterval(interval);
+      abortControllerRef.current?.abort();
+    };
+  }, [loadScores]);
 
   const filteredMatches = useMemo(() => {
     return matches.filter((match) => {
