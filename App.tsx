@@ -12,7 +12,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import LiveScore from './components/LiveScore';
 import { CricketMatch, fetchCricketMatches, formatScore, runRate } from './services/cricketApi';
 
 interface Commentary {
