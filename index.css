@@ -123,12 +123,10 @@
   .match-metrics div,
   .status-strip,
   .studio-status,
-  .broadcast-chip,
   .commentary-item span,
   .crowd-meter div,
   .primary-button,
-  .secondary-button,
-  .control-button {
+  .secondary-button {
     display: flex;
     align-items: center;
   }
@@ -824,16 +822,6 @@
     background: rgba(7, 17, 13, 0.28);
   }
 
-  .menu-icon {
-    display: grid;
-    width: 36px;
-    height: 36px;
-    place-items: center;
-    border-radius: 8px;
-    color: #07110d;
-    background: #fbbf24;
-  }
-
   .image-menu-row {
     grid-template-columns: 62px minmax(0, 1fr) auto 104px;
   }
@@ -1180,69 +1168,6 @@
     padding: 16px 18px;
   }
 
-  .video-frame {
-    position: relative;
-    min-height: 640px;
-    overflow: hidden;
-    border: 1px solid rgba(247, 244, 234, 0.14);
-    border-radius: 8px;
-    background: #030805;
-  }
-
-  .video-frame video {
-    width: 100%;
-    height: 100%;
-    min-height: 640px;
-    object-fit: cover;
-  }
-
-  .empty-feed {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 10px;
-    color: rgba(247, 244, 234, 0.54);
-    background:
-      linear-gradient(135deg, rgba(22, 101, 52, 0.22), rgba(7, 17, 13, 0.9)),
-      repeating-linear-gradient(0deg, rgba(247, 244, 234, 0.04) 0 1px, transparent 1px 30px);
-  }
-
-  .broadcast-chip {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    gap: 7px;
-    padding: 8px 10px;
-    border: 1px solid rgba(247, 244, 234, 0.12);
-    border-radius: 8px;
-    color: #fffaf0;
-    background: rgba(7, 17, 13, 0.72);
-  }
-
-  .score-overlay {
-    position: absolute;
-    right: 14px;
-    bottom: 72px;
-  }
-
-  .control-button {
-    position: absolute;
-    right: 14px;
-    bottom: 14px;
-    width: auto;
-    min-width: 170px;
-    padding: 0 18px;
-    color: #07110d;
-    background: #fbbf24;
-  }
-
-  .control-button.stop {
-    color: #fffaf0;
-    background: #dc2626;
-  }
-
   .commentary-feed {
     min-height: 640px;
     background: rgba(247, 244, 234, 0.06);
@@ -1303,10 +1228,6 @@
     gap: 6px;
     color: rgba(247, 244, 234, 0.56);
     font-size: 12px;
-  }
-
-  .carbon-dark {
-    background-color: #07110d;
   }
 
   .day-mode .app-topbar,
@@ -1445,8 +1366,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .video-frame,
-  .video-frame video,
   .commentary-feed {
     min-height: 540px;
   }
