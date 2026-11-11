@@ -20,7 +20,17 @@
         "./*"
       ]
     },
+    "types": [
+      "vite/client",
+      "node"
+    ],
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "vite-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js"
+  ]
 }
