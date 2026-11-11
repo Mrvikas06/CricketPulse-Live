@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Clock3, Minus, Plus, ShoppingCart, Star } from 'lucide-react';
+import { CheckCircle2, Clock3, Minus, Plus, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface MenuItem {
@@ -49,6 +49,7 @@ const menuItems: MenuItem[] = [
 export default function FoodCounter() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [selectedItem, setSelectedItem] = useState(menuItems[0]);
+  const [orderConfirmed, setOrderConfirmed] = useState<{ id: string; eta: number; count: number } | null>(null);
 
   const cartTotal = useMemo(
     () =>
@@ -63,7 +64,7 @@ export default function FoodCounter() {
     [cart],
   );
 
-  const deliveryEta = itemCount ? Math.max(4, 10 - itemCount) : 0;
+  const deliveryEta = itemCount ? Math.min(25, 8 + itemCount * 2) : 0;
 
   const updateCart = (itemId: number, amount: number) => {
     setCart((current) => {
@@ -72,6 +73,14 @@ export default function FoodCounter() {
       if (nextCount === 0) delete next[itemId];
       return next;
     });
+    if (orderConfirmed) setOrderConfirmed(null);
+  };
+
+  const handlePlaceOrder = () => {
+    if (!itemCount) return;
+    const orderId = `CP-${Math.floor(1000 + Math.random() * 9000)}`;
+    setOrderConfirmed({ id: orderId, eta: deliveryEta, count: itemCount });
+    setCart({});
   };
 
   return (
@@ -153,14 +162,26 @@ export default function FoodCounter() {
         })}
       </div>
 
-      <div className="delivery-strip">
-        <Clock3 className="h-4 w-4" />
-        <span>{itemCount ? `Estimated seat delivery in ${deliveryEta} min` : 'Add items to estimate delivery'}</span>
-      </div>
+      {orderConfirmed ? (
+        <div className="delivery-strip text-emerald-400">
+          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+          <span>Order #{orderConfirmed.id} confirmed! Delivery to seat in ~{orderConfirmed.eta}m</span>
+        </div>
+      ) : (
+        <div className="delivery-strip">
+          <Clock3 className="h-4 w-4" />
+          <span>{itemCount ? `Estimated seat delivery in ${deliveryEta} min` : 'Add items to estimate delivery'}</span>
+        </div>
+      )}
 
-      <button type="button" className="primary-button" disabled={!itemCount}>
+      <button
+        type="button"
+        className="primary-button"
+        disabled={!itemCount}
+        onClick={handlePlaceOrder}
+      >
         <ShoppingCart className="h-4 w-4" />
-        Seat Delivery
+        {itemCount ? `Order Seat Delivery (Rs ${cartTotal})` : 'Seat Delivery'}
       </button>
     </section>
   );
