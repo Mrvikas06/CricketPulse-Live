@@ -31,13 +31,26 @@ const feedUrl =
   (typeof process !== 'undefined' ? process.env?.VITE_CRICBUZZ_WEB_FEED_URL : undefined) ||
   '/api/cricbuzz/live';
 
-const formatMatchTime = (dateString: string) =>
-  new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    day: '2-digit',
-    month: 'short',
-  }).format(new Date(dateString));
+const matchTimeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit',
+  day: '2-digit',
+  month: 'short',
+});
+
+const footerTimeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+const formatMatchTime = (dateString: string) => {
+  try {
+    const d = new Date(dateString);
+    return Number.isNaN(d.getTime()) ? 'Time pending' : matchTimeFormatter.format(d);
+  } catch {
+    return 'Time pending';
+  }
+};
 
 const getTeamScore = (match: CricketMatch, teamName?: string) => {
   if (!teamName) return undefined;
@@ -271,9 +284,7 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
         <span>{matches.length} Cricbuzz matches</span>
         <span>
           <Timer className="h-3.5 w-3.5" />
-          {lastUpdated
-            ? `Updated ${lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-            : 'Updating now'}
+          {lastUpdated ? `Updated ${footerTimeFormatter.format(lastUpdated)}` : 'Updating now'}
         </span>
         {error && <span className="score-error">{error}</span>}
       </div>
