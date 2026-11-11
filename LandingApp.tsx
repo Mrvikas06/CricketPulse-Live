@@ -28,7 +28,7 @@ const tabs: Array<{ id: AppTab; label: string; icon: typeof Activity }> = [
 const matchInsights = [
   { label: 'Feed', value: 'Live', detail: 'Cricbuzz web source' },
   { label: 'Refresh', value: '30s', detail: 'Automatic score polling' },
-  { label: 'Mode', value: 'AI', detail: 'Camera commentary ready' },
+  { label: 'Mode', value: 'Live', detail: 'Ball-by-ball commentary' },
 ];
 
 const lensCards = [
