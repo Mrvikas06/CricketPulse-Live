@@ -95,11 +95,13 @@ export default function LandingApp() {
           </div>
         </div>
 
-        <nav className="tabbar" aria-label="Primary views">
+        <nav className="tabbar" aria-label="Primary views" role="tablist">
           {tabs.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
+              role="tab"
+              aria-selected={activeTab === id}
               onClick={() => setActiveTab(id)}
               className={activeTab === id ? 'active' : ''}
             >
@@ -190,6 +192,7 @@ export default function LandingApp() {
                         type="button"
                         className={selectedLens.label === item.label ? 'analysis-choice active' : 'analysis-choice'}
                         key={item.label}
+                        aria-pressed={selectedLens.label === item.label}
                         onClick={() => setSelectedLens(item)}
                       >
                         <span>{item.label}</span>

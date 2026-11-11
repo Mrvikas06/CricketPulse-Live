@@ -43,6 +43,7 @@ export default function StadiumExperience() {
           <button
             key={zone.name}
             type="button"
+            aria-pressed={selectedZone.name === zone.name}
             onClick={() => setSelectedZone(zone)}
             className={selectedZone.name === zone.name ? 'active' : ''}
           >

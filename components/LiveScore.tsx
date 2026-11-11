@@ -194,6 +194,7 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
               key={value}
               type="button"
               className={activeFilter === value ? 'active' : ''}
+              aria-pressed={activeFilter === value}
               onClick={() => setActiveFilter(value as MatchFilter)}
             >
               {label}
@@ -258,6 +259,8 @@ export default function LiveScore({ compact = false }: LiveScoreProps) {
                 type="button"
                 className={isSelected ? 'match-card active-match-card' : 'match-card'}
                 key={match.id}
+                aria-pressed={isSelected}
+                aria-label={`Select match ${match.name}`}
                 onClick={() => setSelectedMatchId(match.id)}
               >
                 <div className="match-card-head">
