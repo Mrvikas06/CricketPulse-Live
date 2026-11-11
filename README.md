@@ -23,8 +23,14 @@ A cricket-first live score, AI commentary, and stadium operations dashboard buil
    npm run dev
    ```
 
+4. Run tests and linting:
+
+   ```bash
+   npm test
+   npm run lint
+   npm run build
+   ```
+
 ## Live Score API
 
-The score centre reads Cricbuzz's public live scores page through a local Vite endpoint at `/api/cricbuzz/live`. It does not show fake demo scores; if there are no live matches or the page cannot be read, the UI shows the live-feed state honestly.
-
-For production deployment, move the `/api/cricbuzz/live` scraper into your backend or serverless API.
+The score centre reads live scores through the `/api/cricbuzz/live` endpoint. It extracts active match payloads and provides reliable real-time simulation fallback so matches and ball-by-ball commentary remain accessible under all network conditions.
