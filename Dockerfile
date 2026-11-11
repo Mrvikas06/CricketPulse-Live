@@ -1,15 +1,15 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Install deps
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm ci
 
 # Copy sources and build
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 # Install a tiny static server
@@ -19,6 +19,7 @@ RUN npm install -g serve
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 8080
-ENV PORT 8080
+ENV PORT=8080 \
+    NODE_ENV=production
 
 CMD ["sh", "-c", "serve -s dist -l $PORT"]

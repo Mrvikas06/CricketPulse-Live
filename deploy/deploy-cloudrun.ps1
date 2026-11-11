@@ -1,5 +1,5 @@
 param(
-    [string]$ServiceName = "x-object-470006-v2",
+    [string]$ServiceName = "cricketpulse-live",
     [string]$ImageName = "gcr.io/$($env:GCLOUD_PROJECT)/$ServiceName",
     [string]$Region = "us-central1"
 )
